@@ -1,7 +1,3 @@
-SET lc_messages TO 'en_US.UTF-8';
-
-
-
 CREATE FOREIGN TABLE aoc2021_day4 (line text)
 SERVER aoc2021 options(filename 'D:\aoc2021.day4.input');
 
@@ -27,10 +23,10 @@ WHERE line != ''
 )
 SELECT 
 SPLIT_PART(LTRIM(REPLACE(line,'  ',' ')), ' ', 1)::INT AS col1 ,
-       SPLIT_PART(LTRIM(REPLACE(line,'  ',' ')), ' ', 2) ::INT AS col2,
-	   SPLIT_PART(LTRIM(REPLACE(line,'  ',' ')), ' ', 3)::INT AS col3, 
-	   SPLIT_PART(LTRIM(REPLACE(line,'  ',' ')), ' ', 4) ::INT AS col4,
-	   SPLIT_PART(LTRIM(REPLACE(line,'  ',' ')), ' ', 5) ::INT AS col5
+SPLIT_PART(LTRIM(REPLACE(line,'  ',' ')), ' ', 2) ::INT AS col2,
+SPLIT_PART(LTRIM(REPLACE(line,'  ',' ')), ' ', 3)::INT AS col3, 
+SPLIT_PART(LTRIM(REPLACE(line,'  ',' ')), ' ', 4) ::INT AS col4,
+SPLIT_PART(LTRIM(REPLACE(line,'  ',' ')), ' ', 5) ::INT AS col5
 
 FROM cte WHERE rnk > 1
 ;
