@@ -1,4 +1,3 @@
-SET lc_messages TO 'en_US.UTF-8';
 
 
 
@@ -88,7 +87,7 @@ SELECT COUNT(*) FROM cte2;
 -- Part 2
 
 
-
+-- Query may take about 20 seconds!!!
 
 WITH grid AS NOT MATERIALIZED (
     SELECT x,y
