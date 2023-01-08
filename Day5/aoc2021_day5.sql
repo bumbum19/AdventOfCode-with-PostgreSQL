@@ -1,5 +1,3 @@
-SET lc_messages TO 'en_US.UTF-8';
-
 
 
 CREATE FOREIGN TABLE aoc2021_day5 (a text)
@@ -79,15 +77,9 @@ SELECT COUNT(*) FROM cte2;
 
 
 
-
-
-
-
-
-
 -- Part 2
 
-
+-- Query may need about 10 seconds!!!
 
 
 WITH grid AS NOT MATERIALIZED (
