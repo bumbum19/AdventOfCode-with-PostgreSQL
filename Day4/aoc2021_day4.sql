@@ -1,6 +1,3 @@
-SET lc_messages TO 'en_US.UTF-8';
-
-
 
 CREATE FOREIGN TABLE aoc2021_day4 (line text)
 SERVER aoc2021 options(filename 'D:\aoc2021.day4.input');
