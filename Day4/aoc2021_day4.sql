@@ -63,10 +63,11 @@ FROM cte WHERE rnk = 1
 -- Part 1
 
 
-WITH bingo2 
-AS 
+WITH bingo2 AS 
 (
-SELECT board, ROW_NUMBER() OVER (PARTITION BY board ORDER BY id) AS x_pos, 
+SELECT board, ROW_NUMBER() OVER 
+	(PARTITION BY board 
+	 ORDER BY id) AS x_pos, 
 UNNEST(ARRAY[1,2,3,4,5]) AS y_pos ,
 UNNEST(ARRAY[col1, col2, col3, col4, col5]) AS num
 FROM bingo
@@ -75,7 +76,9 @@ FROM bingo
 cte AS 
 
 (
-SELECT id, board, COUNT(*) OVER (PARTITION BY board, x_pos, y_pos ORDER BY id ROWS UNBOUNDED PRECEDING) AS cnt 
+SELECT id, board, COUNT(*) OVER 
+	(PARTITION BY board, x_pos, y_pos 
+	 ORDER BY id ROWS UNBOUNDED PRECEDING) AS cnt 
 FROM bingo2 JOIN  marker USING(num) 
 GROUP BY GROUPING SETS (
     (id, board, x_pos),
@@ -89,24 +92,30 @@ GROUP BY GROUPING SETS (
 cte2 AS
 
 (
-SELECT board, id, num*SUM(num) OVER (PARTITION BY board ORDER BY id DESC  ROWS UNBOUNDED PRECEDING EXCLUDE CURRENT ROW) AS score
+SELECT board, id, num * SUM(num) OVER 
+		(PARTITION BY board 
+		 ORDER BY id DESC  ROWS UNBOUNDED PRECEDING EXCLUDE CURRENT ROW) AS score
  FROM  bingo2 JOIN  marker USING(num)    
 GROUP BY board, id, num  
 )
 
 
-SELECT score FROM cte2 WHERE (board,id) IN (SELECT board, id FROM cte WHERE  cnt = 5  ORDER BY id, board LIMIT 1) ; 
+SELECT score 
+FROM cte2 
+WHERE (board,id) IN 
+	(SELECT board, id FROM cte WHERE  cnt = 5  ORDER BY id, board LIMIT 1) ; 
 
-
+-- Solution: 21070
 
 
 -- Part 2
 
 
-WITH bingo2 
-AS 
+WITH bingo2 AS 
 (
-SELECT board, ROW_NUMBER() OVER (PARTITION BY board ORDER BY id) AS x_pos, 
+SELECT board, ROW_NUMBER() OVER 
+	(PARTITION BY board 
+	 ORDER BY id) AS x_pos, 
 UNNEST(ARRAY[1,2,3,4,5]) AS y_pos ,
 UNNEST(ARRAY[col1, col2, col3, col4, col5]) AS num
 FROM bingo
@@ -115,7 +124,9 @@ FROM bingo
 cte AS 
 
 (
-SELECT id, board, COUNT(*) OVER (PARTITION BY board, x_pos, y_pos ORDER BY id ROWS UNBOUNDED PRECEDING) AS cnt 
+SELECT id, board, COUNT(*) OVER 
+	(PARTITION BY board, x_pos, y_pos 
+	 ORDER BY id ROWS UNBOUNDED PRECEDING) AS cnt 
 FROM bingo2 JOIN  marker USING(num) 
 GROUP BY GROUPING SETS (
     (id, board, x_pos),
@@ -129,7 +140,9 @@ GROUP BY GROUPING SETS (
 cte2 AS
 
 (
-SELECT board, id, num*SUM(num) OVER (PARTITION BY board ORDER BY id DESC  ROWS UNBOUNDED PRECEDING EXCLUDE CURRENT ROW) AS score
+SELECT board, id, num * SUM(num) OVER 
+	(PARTITION BY board 
+	 ORDER BY id DESC  ROWS UNBOUNDED PRECEDING EXCLUDE CURRENT ROW) AS score
  FROM  bingo2 JOIN  marker USING(num)    
 GROUP BY board, id, num  
 ),
@@ -141,7 +154,8 @@ cte3 AS
 
 (
 
-SELECT DISTINCT ON (board) board, id FROM cte WHERE  cnt = 5  ORDER BY board , id 
+SELECT DISTINCT ON (board) board, id FROM cte 
+WHERE  cnt = 5  ORDER BY board, id 
 
 )
 
