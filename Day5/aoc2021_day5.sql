@@ -46,7 +46,6 @@ x1 = x2 ),
 
 
 hydrothermal_horiz  AS
-
 (SELECT y1, x1, x2  FROM   hydrothermal WHERE 
 y1 = y2 ),
 
@@ -56,9 +55,7 @@ SELECT x,y
 FROM grid 
 JOIN hydrothermal_vert ON 
  ( y  >=y1 AND y <= y2 OR  y  >=y2 AND y <= y1 )  AND x = x1  
-
 UNION ALL
-
 SELECT x,y
 FROM grid 
 JOIN hydrothermal_horiz ON 
@@ -87,20 +84,14 @@ hydrothermal_vert AS
 (SELECT x1, y1, y2 FROM   hydrothermal WHERE 
 x1 = x2 ),
 
-
 hydrothermal_horiz  AS
-
 (SELECT y1, x1, x2  FROM   hydrothermal WHERE 
 y1 = y2 ),
 
-
 hydrothermal_diag1 AS
-
 (SELECT  x1, y1, x2, y2 FROM hydrothermal WHERE 
 x1 - x2 = y1 - y2 
  ),
- 
- 
  
 hydrothermal_diag2 AS
 
@@ -109,45 +100,36 @@ hydrothermal_diag2 AS
  ),
 
 cte AS 
-(
-SELECT x,y
+(SELECT x,y
 FROM grid 
 JOIN hydrothermal_vert ON 
  ( y  >=y1 AND y <= y2 OR  y  >=y2 AND y <= y1 )  AND x = x1  
 
-UNION ALL
+ UNION ALL
 
 SELECT x,y
 FROM grid 
 JOIN hydrothermal_horiz ON 
  ( x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )  AND y = y1
  
- 
  UNION ALL
 
-SELECT x,y
+ SELECT x,y
 FROM grid 
 JOIN hydrothermal_diag1 ON 
  ( x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )   AND (x - x1 = y - y1)
+ 
  UNION ALL
 
 SELECT x,y
 FROM grid 
 JOIN hydrothermal_diag2 ON 
  ( x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )   AND (x - x1 = -(y - y1))
- 
- 
  ),
  
 cte2 AS 
 (SELECT x,y FROM cte GROUP BY x,y HAVING COUNT(*) >= 2)
 
 SELECT COUNT(*) FROM cte2;
-
-
-
-
-
-
 
 
