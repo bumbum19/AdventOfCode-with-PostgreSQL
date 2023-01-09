@@ -24,6 +24,11 @@ SELECT direction, steps FROM aoc2021_day2;
  FROM submarine;
  
  
+ 
+ -- Solution: 2150351
+ 
+ 
+ 
  -- Part 2
  
  WITH cte AS 
