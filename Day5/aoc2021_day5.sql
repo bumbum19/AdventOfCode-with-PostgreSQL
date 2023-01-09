@@ -6,7 +6,7 @@ CREATE FOREIGN TABLE aoc2021_day5 (a text)
 
 
 
-CREATE TEMPORARY TABLE   hydrothermal  (
+CREATE TEMPORARY TABLE  hydrothermal  (
   x1  INT,
   y1  INT,
   x2  INT,
@@ -28,12 +28,6 @@ SPLIT_PART(REPLACE(a,' -> ', ','),',',2)::INT,
 SPLIT_PART(REPLACE(a,' -> ', ','),',',3)::INT,
 SPLIT_PART(REPLACE(a,' -> ', ','),',',4)::INT 
 FROM aoc2021_day5;
-
-
-
-
-
-
 
 
 -- Part 1
@@ -75,7 +69,7 @@ cte2 AS
 
 SELECT COUNT(*) FROM cte2;
 
-
+-- Solution: 4421
 
 -- Part 2
 
