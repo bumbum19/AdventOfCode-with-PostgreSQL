@@ -35,7 +35,6 @@ cte3 AS
  
 
 
-
 -- Part 2 
 
 
