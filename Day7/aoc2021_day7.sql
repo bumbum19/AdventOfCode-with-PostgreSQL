@@ -107,6 +107,9 @@ WITH mean_screw AS
 SELECT FLOOR(AVG(pos)-0.5) AS low, CEIL(AVG(pos)-0.5) AS high FROM crabs) 
 
 
-SELECT LEAST(SUM((POW(ABS(pos - (SELECT low FROM mean_screw)),2)+ ABS(pos - (SELECT low FROM mean_screw))) / 2 ),
-      SUM((POW(ABS(pos - (SELECT high FROM mean_screw)),2)+ ABS(pos - (SELECT high FROM mean_screw))) / 2 ))::INT AS costs FROM crabs;
+SELECT LEAST(SUM((POW(ABS(pos - (SELECT low FROM mean_screw)),2) + 
+                  ABS(pos - (SELECT low FROM mean_screw))) / 2 ),
+            SUM((POW(ABS(pos - (SELECT high FROM mean_screw)),2) + 
+                 ABS(pos - (SELECT high FROM mean_screw))) / 2 ))::INT AS costs 
+FROM crabs;
 
