@@ -104,8 +104,9 @@ How much fuel must they spend to align to that position?
 
 WITH mean_screw AS 
 (
-SELECT ROUND(AVG(pos)-0.5,0) FROM crabs)
+SELECT FLOOR(AVG(pos)-0.5) AS low, CEIL(AVG(pos)-0.5) AS high FROM crabs) 
 
 
-SELECT SUM((POW(ABS(pos - (TABLE mean_screw)),2)+ ABS(pos - (TABLE mean_screw))) / 2 ) AS costs FROM crabs;
+SELECT LEAST(SUM((POW(ABS(pos - (SELECT low FROM mean_screw)),2)+ ABS(pos - (SELECT low FROM mean_screw))) / 2 ),
+      SUM((POW(ABS(pos - (SELECT high FROM mean_screw)),2)+ ABS(pos - (SELECT high FROM mean_screw))) / 2 ))::INT AS costs FROM crabs;
 
