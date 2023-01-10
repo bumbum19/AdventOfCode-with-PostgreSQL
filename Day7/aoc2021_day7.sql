@@ -107,5 +107,5 @@ WITH mean_screw AS
 SELECT ROUND(AVG(pos)-0.5,0) FROM crabs)
 
 
-SELECT SUM((POW(ABS(pos - (TABLE mean_screw)),2)+ ABS(pos - (TABLE mean))) / 2 ) AS costs FROM crabs;
+SELECT SUM((POW(ABS(pos - (TABLE mean_screw)),2)+ ABS(pos - (TABLE mean_screw))) / 2 ) AS costs FROM crabs;
 
