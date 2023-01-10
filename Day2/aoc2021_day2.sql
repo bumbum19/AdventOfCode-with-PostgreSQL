@@ -1,6 +1,6 @@
 --- Day 2: Dive! ---
 
-# Setup
+-- Setup
 
 
 CREATE FOREIGN TABLE aoc2021_day2 (direction VARCHAR(7), steps INT)
