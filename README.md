@@ -1,1 +1,1 @@
-This repository contains solutions to coding challenges on https://adventofcode.com/2021 solved with PostgreSQL.
+This repository contains solutions to coding challenges on https://adventofcode.com solved with PostgreSQL.
