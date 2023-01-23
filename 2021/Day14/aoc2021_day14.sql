@@ -68,11 +68,9 @@ CREATE FOREIGN TABLE aoc2021_day14 (x text)
  SERVER aoc2022 options(filename 'D:\aoc2021.day14.input');
  
  
- CREATE TEMPORARY TABLE  polymer (
-  day  INT,
-  x  text
-
-
+CREATE TEMPORARY TABLE  polymer (
+day  INT,
+x  text
 );
 
 INSERT INTO polymer 
