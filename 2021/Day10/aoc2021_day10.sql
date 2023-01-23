@@ -46,7 +46,6 @@ and an illegal > was found once (25137 points). So, the total syntax error score
 Find the first illegal character in each corrupted line of the navigation subsystem. What is the total syntax error score for those errors?
 */
 
--- Setup
 
 CREATE FOREIGN TABLE aoc2021_day10 (a text)
  SERVER aoc2022 options(filename 'D:\aoc2021.day10.input');
@@ -167,9 +166,7 @@ scores (symbol, score) AS (
            ('<', 4)
 		   
 		   ),
-           
-		
-cte3 AS 
+ cte3 AS 
 (		
 SELECT SUM(POWER(5,pos-1)*score) AS total_score  
 FROM cte2 
