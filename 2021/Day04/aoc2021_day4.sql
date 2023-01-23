@@ -1,7 +1,5 @@
 --- Day 4: Giant Squid ---
 
--- Description
-
 /*
 
 You're already almost 1.5km (almost a mile) below the surface of the ocean, already so deep that you can't see any sunlight. What you can see, however, 
@@ -85,9 +83,6 @@ CREATE TEMPORARY TABLE bingo (
   
 );
 
-
-
-
 INSERT INTO bingo (board,col1,col2,col3,col4,col5) 
 
 WITH cte AS 
@@ -132,7 +127,6 @@ FROM cte WHERE rnk = 1
 
 
 
--- Part 1
 
 -- Solution
 
@@ -156,9 +150,6 @@ FROM bingo2 JOIN  marker USING(num)
 GROUP BY GROUPING SETS (
     (id, board, x_pos),
     (id, board, y_pos) )
-	
-	
-
 ),
 
 
@@ -176,15 +167,11 @@ GROUP BY board, id, num
 SELECT score 
 FROM cte2 
 WHERE (board,id) IN 
-	(SELECT board, id FROM cte WHERE  cnt = 5  ORDER BY id, board LIMIT 1) ; 
+	(SELECT board, id FROM cte 
+	 WHERE  cnt = 5  ORDER BY id, board LIMIT 1) ; 
 
 
-
--- Part 2
-
-
--- Description
-
+--- Part Two ---
 
 /*
 
@@ -225,13 +212,10 @@ GROUP BY GROUPING SETS (
     (id, board, x_pos),
     (id, board, y_pos) )
 	
-	
-
 ),
 
 
 cte2 AS
-
 (
 SELECT board, id, num * SUM(num) OVER 
 	(PARTITION BY board 
@@ -240,22 +224,15 @@ SELECT board, id, num * SUM(num) OVER
 GROUP BY board, id, num  
 ),
 
-
-
 cte3 AS 
-
-
 (
-
 SELECT DISTINCT ON (board) board, id FROM cte 
 WHERE  cnt = 5  ORDER BY board, id 
-
 )
 
-
-
 SELECT score FROM cte2 WHERE (board,id) 
-	IN (SELECT board, id FROM cte3 ORDER BY id DESC, board DESC LIMIT 1) ; 
+	IN (SELECT board, id FROM cte3 
+	    ORDER BY id DESC, board DESC LIMIT 1) ; 
 
 
 
