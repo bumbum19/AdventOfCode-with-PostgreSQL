@@ -146,6 +146,6 @@ cte2 AS
 )
  
 SELECT 
-SUM(CASE WHEN depth > prev_depth THEN 1 END) AS 
+SUM(CASE WHEN depth > prev_depth THEN 1 END) AS answer
 FROM cte2;
 
