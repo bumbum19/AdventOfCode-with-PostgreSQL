@@ -86,24 +86,17 @@ In the output values, how many times do digits 1, 4, 7, or 8 appear?
 
 */
 
--- Setup
 
 CREATE FOREIGN TABLE aoc2021_day8 (a text)
  SERVER aoc2022 options(filename 'D:\aoc2021.day8.input');
   
   
-  
-  
-  
-  CREATE TEMPORARY TABLE  digits  (
-  id  SERIAL,
-  d1  text,
-  d2  text,
-  d3  text,
-  d4  text
-  
-  
-  
+CREATE TEMPORARY TABLE  digits  (
+id  SERIAL,
+d1  text,
+d2  text,
+d3  text,
+d4  text
 );
 
 INSERT INTO digits(d1,d2,d3,d4)
@@ -113,9 +106,6 @@ SPLIT_PART(REPLACE(a,' | ', ' '),' ',12),
 SPLIT_PART(REPLACE(a,' | ', ' '),' ',13),
 SPLIT_PART(REPLACE(a,' | ', ' '),' ',14) 
 FROM aoc2021_day8;
-
-
-
 
 
 
@@ -188,8 +178,6 @@ Adding all of the output values in this larger example produces 61229.
 
 For each entry, determine all of the wire/segment connections and decode the four-digit output values. What do you get if you add up all of the output values?
 */
-
--- Setup
 
 CREATE TEMPORARY TABLE  digits2  (
   id  SERIAL,
