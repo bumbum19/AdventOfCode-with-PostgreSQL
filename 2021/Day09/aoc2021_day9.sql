@@ -30,7 +30,6 @@ The sum of the risk levels of all low points in the heightmap is therefore 15.
 Find all of the low points on your heightmap. What is the sum of the risk levels of all low points on your heightmap?
 */
 
--- Setup
 
 CREATE FOREIGN TABLE aoc2021_day9 (a text)
  SERVER aoc2022 options(filename 'D:\aoc2021.day9.input');
@@ -38,22 +37,20 @@ CREATE FOREIGN TABLE aoc2021_day9 (a text)
 
 
  
- CREATE TEMPORARY TABLE  lava_tubes  (
-  id  SERIAL,
-  heights  INT[]
-  );
-  
+CREATE TEMPORARY TABLE  lava_tubes  (
+id  SERIAL,
+heights  INT[]
+);
+
   
 INSERT INTO lava_tubes(heights)
 SELECT STRING_TO_ARRAY(a, NULL)::INT[] FROM aoc2021_day9;
 
 
-
-
 -- Solution
 
 	
-WITH t AS 
+WITH cte AS 
 
 (
 SELECT id AS x, y, height
@@ -62,7 +59,7 @@ CROSS JOIN UNNEST(heights) WITH ORDINALITY AS q(height, y)
 ),
 
 
-t2 AS
+cte2 AS
 (
 SELECT *, 
 LAG(height) OVER (PARTITION BY x ORDER BY y) AS west,
@@ -70,11 +67,11 @@ LEAD(height) OVER (PARTITION BY x ORDER BY y) AS east,
 LAG(height) OVER (PARTITION BY y ORDER BY x) AS north,
 LEAD(height) OVER (PARTITION BY y ORDER BY x) AS south
 
-FROM t
+FROM cte
 ),
 
 
-t3 AS 
+cte3 AS 
 
 (
 SELECT *, 
@@ -83,10 +80,10 @@ LEAD(north) OVER (PARTITION BY x ORDER BY y) AS north_east,
 LAG(south) OVER (PARTITION BY x ORDER BY y) AS south_west,
 LEAD(south) OVER (PARTITION BY x ORDER BY y) AS south_east
 
-FROM t2
+FROM cte2
 )
 
-SELECT MAX(height) AS answer FROM t3  
+SELECT SUM(1 + height) AS answer FROM cte3  
 WHERE CASE  
 WHEN LEAST(east, west, north, south, north_east, 
 	 north_west, south_east, south_west) >= height
