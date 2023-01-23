@@ -1,38 +1,15 @@
 --- Day 2: Dive! ---
 
--- Setup
 
-
-CREATE FOREIGN TABLE aoc2021_day2 (direction VARCHAR(7), steps INT)
-SERVER aoc2021 options(filename 'D:\aoc2021.day2.input', delimiter ' ');
- 
- 
-  CREATE TEMPORARY TABLE submarine (
-  id  SERIAL,
-  direction  VARCHAR(7),
-  steps INT 
-  
-);
-
-
-INSERT INTO submarine(direction, steps)
-SELECT direction, steps FROM aoc2021_day2;
- 
- 
- 
- -- Part 1
- 
--- Description
- 
  /*
 
 Now, you need to figure out how to pilot this thing.
 
 It seems like the submarine can take a series of commands like forward 1, down 2, or up 3:
 
-    forward X increases the horizontal position by X units.
-    down X increases the depth by X units.
-    up X decreases the depth by X units.
+   - forward X increases the horizontal position by X units.
+   - down X increases the depth by X units.
+   - up X decreases the depth by X units.
 
 Note that since you're on a submarine, down and up affect your depth, and so they have the opposite result of what you might expect.
 
@@ -47,12 +24,12 @@ forward 2
 
 Your horizontal position and depth both start at 0. The steps above would then modify them as follows:
 
-    forward 5 adds 5 to your horizontal position, a total of 5.
-    down 5 adds 5 to your depth, resulting in a value of 5.
-    forward 8 adds 8 to your horizontal position, a total of 13.
-    up 3 decreases your depth by 3, resulting in a value of 2.
-    down 8 adds 8 to your depth, resulting in a value of 10.
-    forward 2 adds 2 to your horizontal position, a total of 15.
+   - forward 5 adds 5 to your horizontal position, a total of 5.
+   - down 5 adds 5 to your depth, resulting in a value of 5.
+   - forward 8 adds 8 to your horizontal position, a total of 13.
+   - up 3 decreases your depth by 3, resulting in a value of 2.
+   - down 8 adds 8 to your depth, resulting in a value of 10.
+   - forward 2 adds 2 to your horizontal position, a total of 15.
 
 After following these instructions, you would have a horizontal position of 15 and a depth of 10. (Multiplying these together produces 150.)
 
@@ -60,24 +37,38 @@ Calculate the horizontal position and depth you would have after following the p
 What do you get if you multiply your final horizontal position by your final depth?
 
 */
- 
--- Solution
- 
- 
- 
- SELECT 
- SUM(CASE WHEN direction = 'forward' THEN steps END ) *  
- SUM(CASE WHEN direction = 'down' THEN steps WHEN direction = 'up' THEN -steps END) AS answer
- FROM submarine;
+
+
+
+
+CREATE FOREIGN TABLE aoc2021_day2 (direction VARCHAR(7), steps INT)
+SERVER aoc2021 options(filename 'D:\aoc2021.day2.input', delimiter ' ');
  
  
+CREATE TEMPORARY TABLE submarine 
+(
+id  SERIAL,
+direction  VARCHAR(7),
+steps INT 
+
+);
+
+
+INSERT INTO submarine(direction, steps)
+SELECT direction, steps FROM aoc2021_day2;
  
  
+-- Solution 
+
+SELECT 
+SUM(CASE WHEN direction = 'forward' THEN steps END ) *  
+SUM(CASE WHEN direction = 'down' THEN steps WHEN direction = 'up' THEN -steps END) AS answer
+FROM submarine;
  
  
- -- Part 2
+--- Part Two ---
  
- -- Description
+
  
  /*
  
@@ -115,8 +106,8 @@ What do you get if you multiply your final horizontal position by your final dep
  WITH cte AS 
  (SELECT direction, steps,  
   SUM(CASE WHEN direction = 'down' THEN steps 
-		   WHEN direction = 'up' THEN -steps END) OVER (
-				ORDER BY id ROWS UNBOUNDED PRECEDING) AS aim
+	   WHEN direction = 'up' THEN -steps END) OVER (
+			ORDER BY id ROWS UNBOUNDED PRECEDING) AS aim
   FROM submarine
   ) 
  
