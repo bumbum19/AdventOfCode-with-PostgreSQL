@@ -104,12 +104,8 @@ start-RW
 How many paths through this cave system are there that visit small caves at most once?
 */
 
--- Setup
-
 CREATE FOREIGN TABLE aoc2021_day12 (a text)
  SERVER aoc2022 options(filename 'D:\aoc2021.day12.input');
- 
- 
  
  
 CREATE TEMPORARY TABLE  caves (
