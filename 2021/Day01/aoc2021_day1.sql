@@ -1,9 +1,6 @@
-# Description: 
+--- Day 1: Sonar Sweep ---
  
  /*
-
---- Day 1: Sonar Sweep ---
-
 You're minding your own business on a ship at sea when the overboard alarm goes off! You rush to see if you can help. Apparently, one of the Elves tripped and 
 accidentally sent the sleigh keys flying into the ocean!Before you know it, you're inside a submarine the Elves keep ready for situations like this. 
 It's covered in Christmas lights (because of course it is), and it even has an experimental antenna that should be able to track the keys if you can boost
@@ -29,38 +26,7 @@ For example, suppose you had the following report:
 263
 
 This report indicates that, scanning outward from the submarine, the sonar sweep found depths of 199, 200, 208, 210, and so on.
-*/ 
- 
-# Setup
- 
-CREATE EXTENSION file_fdw;
- 
-CREATE SERVER aoc2021 FOREIGN  DATA wrapper file_fdw;
- 
- 
- 
-CREATE FOREIGN TABLE aoc2021_day1 (depth INT)
-SERVER aoc2021 options(filename 'D:\aoc2021.day1.input');
 
- 
- 
- 
- 
- CREATE TEMPORARY TABLE sea_floor (
-  id  SERIAL,
-  depth  INT
-  
-);
-
-
-INSERT INTO sea_floor(depth)
-SELECT depth FROM aoc2021_day1;
-
--- Part 1
-
-# Description
-
-/*
 The first order of business is to figure out how quickly the depth increases, just so you know what you're dealing with - you never know if the keys will get carried 
 into deeper water by an ocean current or a fish or something.
 
@@ -81,12 +47,33 @@ In the example above, the changes are as follows:
 In this example, there are 7 measurements that are larger than the previous measurement.
 
 How many measurements are larger than the previous measurement?
-*/
+
+*/ 
+ 
+-- Setup
+ 
+CREATE EXTENSION file_fdw;
+ 
+CREATE SERVER aoc2021 FOREIGN  DATA wrapper file_fdw;
+ 
+ 
+ 
+CREATE FOREIGN TABLE aoc2021_day1 (depth INT)
+SERVER aoc2021 options(filename 'D:\aoc2021.day1.input');
+
+ 
+ -- Solution
+ 
+ 
+ CREATE TEMPORARY TABLE sea_floor (
+  id  SERIAL,
+  depth  INT
+  
+);
 
 
-
-# Solution
-
+INSERT INTO sea_floor(depth)
+SELECT depth FROM aoc2021_day1;
 
 
 WITH cte AS
@@ -100,16 +87,7 @@ SELECT
 SUM(CASE WHEN depth > prev_depth THEN 1 END) AS answer 
 FROM cte;
 
-
-
-
-
-
-
--- Part 2
-
-
-# Description
+--- Part Two ---
 
 /*
 Considering every single measurement isn't as useful as you expected: there's just too much noise in the data.
@@ -151,7 +129,7 @@ Consider sums of a three-measurement sliding window. How many sums are larger th
 
 
 
-# Solution
+-- Solution
 
 WITH cte AS
 
