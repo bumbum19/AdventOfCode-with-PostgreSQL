@@ -1,0 +1,19 @@
+ -- Part 1
+ 
+ answer
+--------
+   1298
+(1 row)
+
+
+Time: 17.752 ms
+
+-- Part 2
+
+ answer
+--------
+   1248
+(1 row)
+
+
+Time: 12.082 ms
