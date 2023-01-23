@@ -39,7 +39,7 @@ or position 10 (71 fuel).
 Determine the horizontal position that the crabs can align to using the least fuel possible. How much fuel must they spend to align to that position?
 */
 
--- Setup
+
 
 CREATE FOREIGN TABLE aoc2021_day7 (a text)
   SERVER aoc2022 options(filename 'D:\aoc2021.day7.input');
