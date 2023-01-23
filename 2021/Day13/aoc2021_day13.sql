@@ -120,14 +120,8 @@ The transparent paper is pretty big, so for now, focus on just completing the fi
 How many dots are visible after completing just the first fold instruction on your transparent paper?
 */
 
-
--- Setup
-
-
 CREATE FOREIGN TABLE aoc2021_day13 (x text)
  SERVER aoc2022 options(filename 'D:\aoc2021.day13.input');
- 
- 
  
  
 CREATE TEMPORARY TABLE  paper  (
@@ -139,12 +133,9 @@ y INT
 INSERT INTO paper(x,y)
 SELECT 
 SPLIT_PART(x,',',1)::INT,
--1*SPLIT_PART(x,',',2)::INT
+-1 * SPLIT_PART(x,',',2)::INT
 FROM aoc2021_day13
 WHERE x NOT LIKE '%f%' AND x != '';
-
-
-
 
 
 CREATE TEMPORARY TABLE  folding  (
