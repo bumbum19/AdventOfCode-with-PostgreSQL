@@ -46,9 +46,10 @@ To avoid the most dangerous areas, you need to determine the number of points wh
 with a 2 or larger - a total of 5 points.
 
 Consider only horizontal and vertical lines. At how many points do at least two lines overlap
-?*/
+?
+*/
 
--- Setup
+
 
 CREATE FOREIGN TABLE aoc2021_day5 (a text)
  SERVER aoc2022 options(filename 'D:\aoc2021.day5.input');
@@ -65,12 +66,6 @@ CREATE TEMPORARY TABLE  hydrothermal  (
   
 );
 
-
-
-
-
-
-
 INSERT INTO hydrothermal
 SELECT 
 SPLIT_PART(REPLACE(a,' -> ', ','),',',1)::INT,
@@ -80,7 +75,7 @@ SPLIT_PART(REPLACE(a,' -> ', ','),',',4)::INT
 FROM aoc2021_day5;
 
 
--- Part 1
+
 
 -- Solution
 
@@ -119,9 +114,7 @@ cte2 AS
 SELECT COUNT(*) FROM cte2;
 
 
--- Part 2
-
--- Description
+--- Part Two ---
 
 /*
 
@@ -154,7 +147,6 @@ Consider all of the lines. At how many points do at least two lines overlap?
 
 
 -- Solution
-
 
 -- Query may need about 10 seconds!!!
 
