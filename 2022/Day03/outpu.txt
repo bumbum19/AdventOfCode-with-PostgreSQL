@@ -1,0 +1,20 @@
+-- Part 1
+
+ answer
+--------
+   7737
+(1 row)
+
+
+Time: 7.629 ms
+
+
+-- Part 2
+
+ answer
+--------
+   2697
+(1 row)
+
+
+Time: 14.807 ms
