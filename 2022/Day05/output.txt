@@ -1,0 +1,20 @@
+-- Part 1
+
+ string_agg
+------------
+ GFTNRBZPF
+(1 row)
+
+
+Time: 142.121 ms
+
+
+-- Part 2
+
+ string_agg
+------------
+ VRQWPDSGP
+(1 row)
+
+
+Time: 164.928 ms
