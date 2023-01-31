@@ -124,14 +124,14 @@ What do you get if you multiply together the number of trees encountered on each
 
 -- Define product aggregate function( not optimized for windows usage)
 
-CREATE FUNCTION IF NOT EXISTS MULTIPLY(BIGINT, BIGINT) RETURNS BIGINT
+CREATE OR REPLACE FUNCTION  MULTIPLY(BIGINT, BIGINT) RETURNS BIGINT
     AS 'select $1 * $2;'
     LANGUAGE SQL
     IMMUTABLE
     RETURNS NULL ON NULL INPUT;
 	
 	
-CREATE AGGREGATE PRODUCT IF NOT EXISTS (BIGINT)
+CREATE OR REPLACE AGGREGATE PRODUCT  EXISTS (BIGINT)
 (
     sfunc = MULTIPLY,
     stype = BIGINT,
