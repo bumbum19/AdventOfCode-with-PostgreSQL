@@ -1,0 +1,20 @@
+ -- Part 1
+ 
+count
+-------
+   580
+(1 row)
+
+
+Time: 3.715 ms
+
+
+-- Part 2
+
+count
+-------
+   611
+(1 row)
+
+
+Time: 5.257 ms
