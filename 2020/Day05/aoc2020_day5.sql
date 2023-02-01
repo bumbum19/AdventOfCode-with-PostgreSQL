@@ -1,4 +1,3 @@
-SET lc_messages TO 'en_US.UTF-8';
 
 
 CREATE FOREIGN TABLE aoc2020_day5 (x text)
