@@ -57,13 +57,13 @@ CREATE FOREIGN TABLE aoc2021_day5 (a text)
 
 
 
-CREATE TEMPORARY TABLE  hydrothermal  (
-  x1  INT,
-  y1  INT,
-  x2  INT,
-  y2  INT,
-  PRIMARY KEY (x1,y1,x2,y2)
-  
+CREATE TEMPORARY TABLE  hydrothermal  
+(
+      x1  INT,
+      y1  INT,
+      x2  INT,
+      y2  INT,
+      PRIMARY KEY (x1,y1,x2,y2)
 );
 
 INSERT INTO hydrothermal
@@ -80,36 +80,48 @@ FROM aoc2021_day5;
 -- Solution
 
 
-WITH grid AS NOT MATERIALIZED (
-    SELECT x,y
-FROM GENERATE_SERIES(0,999) AS x CROSS JOIN GENERATE_SERIES(0,999) AS y
+WITH grid AS NOT MATERIALIZED 
+(
+   SELECT x,y
+   FROM GENERATE_SERIES(0,999) AS x 
+   CROSS JOIN GENERATE_SERIES(0,999) AS y
 ),
 
 
 hydrothermal_vert AS
-
-(SELECT x1, y1, y2 FROM   hydrothermal WHERE 
-x1 = x2 ),
+(
+   SELECT x1, y1, y2 FROM  hydrothermal 
+   WHERE x1 = x2 
+),
 
 
 hydrothermal_horiz  AS
-(SELECT y1, x1, x2  FROM   hydrothermal WHERE 
-y1 = y2 ),
+(
+   SELECT y1, x1, x2  FROM  hydrothermal 
+   WHERE y1 = y2 
+),
 
 cte AS 
 (
-SELECT x,y
-FROM grid 
-JOIN hydrothermal_vert ON 
- ( y  >=y1 AND y <= y2 OR  y  >=y2 AND y <= y1 )  AND x = x1  
-UNION ALL
-SELECT x,y
-FROM grid 
-JOIN hydrothermal_horiz ON 
- ( x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )  AND y = y1),
+   SELECT x,y
+   FROM grid 
+   JOIN hydrothermal_vert  
+      ON ( y  >=y1 AND y <= y2 OR  y  >=y2 AND y <= y1 )  
+      AND x = x1  
+   UNION ALL
+   SELECT x,y
+   FROM grid 
+   JOIN hydrothermal_horiz  
+      ON (x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )  
+      AND y = y1
+),
  
 cte2 AS 
-(SELECT x,y FROM cte GROUP BY x,y HAVING COUNT(*) >= 2)
+(
+   SELECT x,y FROM cte 
+   GROUP BY x,y 
+   HAVING COUNT(*) >= 2
+)
 
 SELECT COUNT(*) FROM cte2;
 
