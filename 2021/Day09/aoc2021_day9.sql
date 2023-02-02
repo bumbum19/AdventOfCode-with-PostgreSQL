@@ -37,8 +37,9 @@ CREATE FOREIGN TABLE aoc2021_day9 (a text)
 
 
  
-CREATE TEMPORARY TABLE  lava_tubes  (
-id  SERIAL,
+CREATE TEMPORARY TABLE  lava_tubes  
+(
+id  SERIAL ,
 heights  INT[]
 );
 
