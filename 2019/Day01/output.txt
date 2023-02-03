@@ -1,0 +1,20 @@
+-- First star
+
+   sum
+---------
+ 6448096
+(1 row)
+
+
+Time: 0.367 ms
+
+-- Second star
+
+ 
+ fuel_requirement
+------------------
+          9666422
+(1 row)
+
+
+Time: 1.060 ms
