@@ -1,0 +1,21 @@
+-- First star
+
+   num
+---------
+ 5534943
+(1 row)
+
+
+Time: 6.907 ms
+
+
+-- Second star
+
+
+ answer
+--------
+   7603
+(1 row)
+
+
+Time: 87730.682 ms (01:27.731)
