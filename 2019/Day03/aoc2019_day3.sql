@@ -96,7 +96,7 @@ cte3 AS
 	VALUES (0,2,0,0)
 )
 
-SELECT  popen(string_agg(x::text|| ',' || y::text, ',' ORDER BY n)::path) AS path1 FROM cte3 
+SELECT  popen(string_agg(x::text|| ',' || y::text, ',' ORDER BY n)::path) FROM cte3 
 GROUP BY rnk;
 
 
@@ -135,9 +135,7 @@ grid AS
 )
 
 SELECT x + y AS min_distance FROM grid 
-WHERE NOT EXISTS (SELECT * FROM wires WHERE NOT point(x,y) <@ wire) 
-OFFSET 1 LIMIT 1;
-
+WHERE NOT EXISTS (SELECT * FROM wires WHERE NOT point(x,y) <@ wire) OFFSET 1 LIMIT 1;
 
 --- Part Two ---
 
