@@ -1,0 +1,19 @@
+-- First Star
+
+ min_distance
+--------------
+          207
+(1 row)
+
+
+Time: 11059.493 ms (00:11.059)
+
+-- Second Star
+
+  sum
+-------
+ 21196
+(1 row)
+
+
+Time: 5734.109 ms (00:05.734)
