@@ -1,3 +1,9 @@
+
+
+
+
+
+
 CREATE FOREIGN TABLE aoc2019_day4 (x text)
 SERVER aoc2019 options(filename 'D:\aoc2019.day4.input');
 
