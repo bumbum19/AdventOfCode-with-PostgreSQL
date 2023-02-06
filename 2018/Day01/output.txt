@@ -1,0 +1,21 @@
+-- First Star
+
+ sum
+-----
+ 884
+(1 row)
+
+
+Time: 0.322 ms
+
+
+-- Second Star
+
+
+ answer
+--------
+  59908
+(1 row)
+
+
+Time: 483.478 ms
