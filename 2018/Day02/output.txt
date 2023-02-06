@@ -1,0 +1,21 @@
+-- First Star
+
+
+ checksum
+----------
+     7904
+(1 row)
+
+
+Time: 8.895 ms
+
+
+-- Second Star
+
+        common_box
+---------------------------
+ wugbihckpoymcpaxefotvdzns
+(1 row)
+
+
+Time: 1139.527 ms (00:01.140)
