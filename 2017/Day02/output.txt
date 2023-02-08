@@ -1,0 +1,20 @@
+-- First Star
+
+ checksum
+----------
+    51139
+(1 row)
+
+
+Time: 3.296 ms
+
+
+-- Second Star
+
+ checksum
+----------
+      272
+(1 row)
+
+
+Time: 2.925 ms
