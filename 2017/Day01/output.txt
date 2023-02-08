@@ -1,0 +1,25 @@
+-- First Star
+
+
+ sum
+------
+ 1047
+(1 row)
+
+
+Time: 1.190 ms
+
+
+
+-- Second Star
+
+
+ sum
+-----
+ 982
+(1 row)
+
+
+Time: 1.369 ms
+
+
