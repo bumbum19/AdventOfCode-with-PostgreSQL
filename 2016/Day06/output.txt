@@ -1,0 +1,21 @@
+-- First Star
+
+ string_agg
+------------
+ ygjzvzib
+(1 row)
+
+
+Time: 3.563 ms
+
+
+-- Second Star
+
+
+ string_agg
+------------
+ pdesmnoz
+(1 row)
+
+
+Time: 3.539 ms
