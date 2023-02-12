@@ -161,7 +161,7 @@ moves AS
 	SELECT id, move, ROW_NUMBER() OVER () AS pos, 
 	CASE WHEN move = 'R' THEN 1 WHEN move = 'L' THEN -1 ELSE 0 END AS x,
 	CASE WHEN move = 'U' THEN 1 WHEN move = 'D' THEN -1 ELSE 0 END AS y
-    FROM instructions CROSS JOIN STRING_TO_TABLE(instruction,NULL)  AS move
+       FROM instructions CROSS JOIN STRING_TO_TABLE(instruction, NULL)  AS move
 ),
 
 walk(id, pos, x, y) AS 
