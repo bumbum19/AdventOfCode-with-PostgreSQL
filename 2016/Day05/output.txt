@@ -1,0 +1,19 @@
+-- First Star
+
+  substr
+----------
+ 801b56a7
+(1 row)
+
+
+Time: 22824.735 ms (00:22.825)
+
+-- Second Star
+
+substr
+----------
+ 424a0197
+(1 row)
+
+
+Time: 62206.411 ms (01:02.206)
