@@ -1,0 +1,19 @@
+-- First Star
+
+ ?column?
+----------
+      232
+(1 row)
+
+
+Time: 2.261 ms
+
+-- Second Star
+
+ pos
+------
+ 1783
+(1 row)
+
+
+Time: 4.293 ms
