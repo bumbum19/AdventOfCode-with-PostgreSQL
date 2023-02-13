@@ -75,10 +75,7 @@ What is the position of the character that causes Santa to first enter the basem
 
 */
 
-
-
-
-
+-- Second Star
 
 WITH cte AS
 (
