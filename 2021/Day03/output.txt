@@ -1,0 +1,20 @@
+-- First Star
+
+ power_consumption
+-------------------
+           4191876
+(1 row)
+
+
+Time: 4.675 ms
+
+
+-- Second Star
+
+ life_support_rating
+---------------------
+             3414905
+(1 row)
+
+
+Time: 18.773 ms
