@@ -69,27 +69,31 @@ After the rearrangement procedure completes, what crate ends up on top of each s
 
 */
 
-
+-- Read data
 
 CREATE FOREIGN TABLE aoc2022_day5 (x text)
 SERVER aoc2022 options(filename 'D:\aoc2022.day5.input');
 
 
+-- Create base tables
 
 CREATE TEMPORARY TABLE  arrangement 
 (
-stack INT,
-height  INT,
-symbol text
+	stack INT,
+	height  INT,
+	symbol text
  );
  
 CREATE TEMPORARY TABLE  moves 
 (
-id SERIAL,
-undock  INT,
-target INT,
-amount INT
+	id SERIAL,
+	undock  INT,
+	target INT,
+	amount INT
  );
+
+
+-- Insert data
 
 INSERT INTO arrangement
 WITH cte AS 
@@ -115,8 +119,7 @@ cte3 AS
 
 SELECT stack, height, SUBSTR(x,stack*4 - 3,3) AS symbol 
 FROM cte3 NATURAL JOIN cte
-WHERE SUBSTR(x,stack*4 - 3,3) != '   '
-; 
+WHERE SUBSTR(x,stack*4 - 3,3) != '   '; 
 
 INSERT INTO moves (undock,target,amount)
 SELECT 
@@ -124,11 +127,10 @@ SPLIT_PART(x,' ',4)::INT,
 SPLIT_PART(x,' ',6)::INT,
 SPLIT_PART(x,' ',2)::INT
 FROM aoc2022_day5
-WHERE x LIKE 'move%'
-;
+WHERE x LIKE 'move%';
   
   
-
+-- First Star
 
 WITH RECURSIVE arrangement2(stack, height, symbol)  AS 
 (
@@ -239,6 +241,9 @@ After the rearrangement procedure completes, what crate ends up on top of each s
 
 
 */
+
+
+-- Second Star
 
 WITH RECURSIVE arrangement2(stack, height, symbol )  AS 
 (
