@@ -257,9 +257,10 @@ WITH RECURSIVE arrangement2(stack, height, symbol )  AS
 
 arrangement3 AS 
 
-(TABLE arrangement
- UNION ALL
- TABLE arrangement2
+(
+	TABLE arrangement
+	UNION ALL
+	TABLE arrangement2
 ),
 
 
