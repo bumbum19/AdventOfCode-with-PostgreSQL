@@ -53,39 +53,47 @@ Find the Elf carrying the most Calories. How many total Calories is that Elf car
 
 */
 
-
-
-
-
+-- Create new server
 
 CREATE SERVER aoc2022 FOREIGN  DATA wrapper file_fdw;
  
  
+-- Read data
  
 CREATE FOREIGN TABLE aoc2022_day1 (calories INT)
 SERVER aoc2022 options(filename 'D:\aoc2022.day1.input', NULL '');
 
 
-CREATE TEMPORARY TABLE  elves (
-  id  SERIAL ,
-  calories INT
-  );
+
+-- Create base table
+
+CREATE TEMPORARY TABLE  elves
+(
+	
+	id  SERIAL,
+	calories INT
+);
+
+
+-- Insert data
   
 INSERT INTO elves(calories)
 SELECT * FROM aoc2022_day1;
  
 
+-- First Star
+
 WITH cte AS 
 (
- SELECT calories, COUNT(*) FILTER  
-  (WHERE calories IS NULL) OVER
-   (ORDER BY id ) + 1 AS elf FROM elves
+	SELECT calories, COUNT(*) FILTER (WHERE calories IS NULL) OVER w + 1 AS elf 
+	FROM elves
+	WINDOW w AS (ORDER BY id)
 )
 
 
 
 SELECT SUM(calories) AS answer FROM cte 
-GROUP BY elf ORDER BY SUM(calories) DESC  LIMIT 1;
+GROUP BY elf ORDER BY SUM(calories) DESC LIMIT 1;
 
 
 --- Part Two ---
@@ -104,18 +112,22 @@ Find the top three Elves carrying the most Calories. How many Calories are those
 
 */
 
+-- Second Star
+
 WITH cte AS 
 (
- SELECT calories, 
-  COUNT(*) FILTER 
-   (WHERE calories IS NULL) OVER (ORDER BY id ) + 1 AS elf 
- FROM elves
+	SELECT calories, COUNT(*) FILTER (WHERE calories IS NULL) OVER w + 1 AS elf 
+	FROM elves
+	WINDOW w AS (ORDER BY id)
 ),
 
 cte2 AS 
 (
-	SELECT SUM(calories) AS calories FROM cte 
-	GROUP BY elf ORDER BY SUM(calories) DESC  LIMIT 3
+	SELECT SUM(calories) AS calories 
+	FROM cte 
+	GROUP BY elf 
+	ORDER BY SUM(calories) DESC 
+	LIMIT 3
 )
 
 SELECT SUM(calories) AS answer FROM cte2;
