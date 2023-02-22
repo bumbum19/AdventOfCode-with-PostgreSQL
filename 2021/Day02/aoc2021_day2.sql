@@ -39,26 +39,29 @@ What do you get if you multiply your final horizontal position by your final dep
 */
 
 
-
+-- Read data
 
 CREATE FOREIGN TABLE aoc2021_day2 (direction VARCHAR(7), steps INT)
 SERVER aoc2021 options(filename 'D:\aoc2021.day2.input', delimiter ' ');
  
  
+ -- Create base table
+
 CREATE TEMPORARY TABLE submarine 
 (
-id  SERIAL,
-direction  VARCHAR(7),
-steps INT 
+	id  SERIAL,
+	direction  VARCHAR(7),
+	steps INT 
 
 );
 
+-- Insert data
 
 INSERT INTO submarine(direction, steps)
 SELECT direction, steps FROM aoc2021_day2;
  
  
--- Solution 
+-- First Star 
 
 SELECT 
 SUM(CASE WHEN direction = 'forward' THEN steps END ) *  
@@ -68,9 +71,7 @@ FROM submarine;
  
 --- Part Two ---
  
-
- 
- /*
+/*
  
  Based on your calculations, the planned course doesn't seem to make any sense. You find the submarine manual and discover that the process is actually 
  slightly more complicated.
@@ -101,20 +102,22 @@ Using this new interpretation of the commands, calculate the horizontal position
 What do you get if you multiply your final horizontal position by your final depth?
 */
  
--- Solution
+-- Second Star
  
  WITH cte AS 
- (SELECT direction, steps,  
-  SUM(CASE WHEN direction = 'down' THEN steps 
-	   WHEN direction = 'up' THEN -steps END) OVER (
-			ORDER BY id ROWS UNBOUNDED PRECEDING) AS aim
-  FROM submarine
-  ) 
- 
+(
+	SELECT direction, steps,  
+	SUM(CASE WHEN direction = 'down' THEN steps 
+	    WHEN direction = 'up' THEN -steps END) OVER w  AS aim
+	FROM submarine
+	WINDOW w AS (ORDER BY id ROWS UNBOUNDED PRECEDING)
+) 
+
 
  
  SELECT 
  SUM(steps) * SUM(steps * aim) AS answer
- FROM cte WHERE direction = 'forward';
+ FROM cte 
+ WHERE direction = 'forward';
  
  
