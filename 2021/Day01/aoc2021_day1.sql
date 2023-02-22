@@ -50,42 +50,48 @@ How many measurements are larger than the previous measurement?
 
 */ 
  
--- Setup
+-- Create new server
  
 CREATE EXTENSION file_fdw;
- 
 CREATE SERVER aoc2021 FOREIGN  DATA wrapper file_fdw;
  
- 
+ -- Read data
  
 CREATE FOREIGN TABLE aoc2021_day1 (depth INT)
 SERVER aoc2021 options(filename 'D:\aoc2021.day1.input');
 
  
- -- Solution
+ -- Create base table
  
  
- CREATE TEMPORARY TABLE sea_floor (
-  id  SERIAL,
-  depth  INT
-  
-);
+ CREATE TEMPORARY TABLE sea_floor
+ (
+	id  SERIAL,
+	depth  INT
+ );
+
+-- Insert data
 
 
 INSERT INTO sea_floor(depth)
 SELECT depth FROM aoc2021_day1;
 
 
+-- First Star
+
 WITH cte AS
 (
- SELECT depth, 
- LAG(depth) OVER 
-	(ORDER BY id) AS prev_depth FROM sea_floor 
+	 SELECT depth, 
+	 LAG(depth) OVER w  AS prev_depth 
+	 FROM sea_floor 
+	 WINDOW w AS (ORDER BY id)
 )
  
 SELECT 
 SUM(CASE WHEN depth > prev_depth THEN 1 END) AS answer 
 FROM cte;
+
+
 
 --- Part Two ---
 
@@ -128,21 +134,21 @@ Consider sums of a three-measurement sliding window. How many sums are larger th
 */
 
 
-
--- Solution
+-- Second Star
 
 WITH cte AS
-
 (
- SELECT SUM(depth) OVER 
-	(ORDER BY id RANGE BETWEEN 2 PRECEDING AND CURRENT ROW ) 
-	 AS depth FROM sea_floor OFFSET 2
+	SELECT SUM(depth) OVER w AS depth 
+	FROM sea_floor 
+	WINDOW w AS (ORDER BY id RANGE BETWEEN 2 PRECEDING AND CURRENT ROW ) 
+	OFFSET 2
 ),
 
 cte2 AS
 (
- SELECT depth, 
-	LAG(depth) OVER () AS prev_depth FROM cte 
+	SELECT depth, 
+	LAG(depth) OVER () AS prev_depth 
+	FROM cte 
 )
  
 SELECT 
