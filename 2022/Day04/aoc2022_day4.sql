@@ -52,20 +52,24 @@ In how many assignment pairs does one range fully contain the other?
 */
 
 
-
+-- Read data
 
 CREATE FOREIGN TABLE aoc2022_day4 (a text, b text)
 SERVER aoc2022 options(filename 'D:\aoc2022.day4.input', delimiter ',');
 
 
 
-CREATE TEMPORARY TABLE  camp (
-  id  SERIAL ,
-  sections1 INT4RANGE,
-  sections2 INT4RANGE
-  
-  );
+-- Create base table
 
+CREATE TEMPORARY TABLE  camp 
+(
+   id  SERIAL,
+   sections1 INT4RANGE,
+   sections2 INT4RANGE
+  
+);
+
+-- Insert data
 
 INSERT INTO camp(sections1, sections2)
 SELECT
@@ -73,7 +77,7 @@ INT4RANGE(SPLIT_PART(a,'-',1)::INT,SPLIT_PART(a,'-',2)::INT,'[]'),INT4RANGE(SPLI
 FROM aoc2022_day4;
 
 
-
+-- First Star
 
 SELECT 
 COUNT(CASE WHEN sections1 <@ sections2 OR 
@@ -102,6 +106,8 @@ In how many assignment pairs do the ranges overlap?
 
 
 */
+
+-- Second Star
 
 
 SELECT 
