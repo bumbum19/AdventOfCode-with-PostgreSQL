@@ -44,32 +44,48 @@ How many characters need to be processed before the first start-of-packet marker
 
 */
 
-
-
+-- Read data
 
 CREATE FOREIGN TABLE aoc2022_day6 (x text)
 SERVER aoc2022 options(filename 'D:\aoc2022.day6.input');
 
 
-CREATE TEMPORARY TABLE  marker (
-buffer text
- );
+-- Create base table
+
+CREATE TEMPORARY TABLE  marker 
+(
+	buffer text
+);
  
  INSERT INTO marker 
  SELECT *
- FROM 
- aoc2022_day6;
+ FROM aoc2022_day6;
 
+-- First Star
 
 WITH cte AS 
 (
-	SELECT n, lit, LAG(lit,1) OVER w AS lag1, LAG(lit,2) OVER w AS lag2, LAG(lit,3) OVER w AS lag3 
-	FROM marker CROSS JOIN  STRING_TO_TABLE(buffer, NULL) WITH ORDINALITY AS t(lit,n) 
+	SELECT n, lit, 
+	LAG(lit,1) OVER w AS lag1, 
+	LAG(lit,2) OVER w AS lag2, 
+	LAG(lit,3) OVER w AS lag3 
+	FROM marker 
+	CROSS JOIN  STRING_TO_TABLE(buffer, NULL) 
+		WITH ORDINALITY AS t(lit,n) 
 	WINDOW w AS (ORDER BY n)
 )
 
-SELECT MIN(n) FROM cte WHERE lit != lag1 AND lit != lag2 AND lit != lag3 AND 
-lag1 != lag2 AND lag1 != lag3 AND lag2 != lag3;
+
+-- First Star
+
+SELECT MIN(n) 
+FROM cte 
+WHERE lit != lag1 
+AND lit != lag2 
+AND lit != lag3 
+AND lag1 != lag2 
+AND lag1 != lag3 
+AND lag2 != lag3;
 
 
 
@@ -96,12 +112,19 @@ How many characters need to be processed before the first start-of-message marke
 
 */
 
+-- Second Star
+
 
 WITH RECURSIVE cte AS
 (
 
-	SELECT   n, lit, STRING_AGG(lit,'') OVER (ORDER BY n RANGE BETWEEN 13 PRECEDING AND CURRENT ROW) AS x
-	FROM marker CROSS JOIN  STRING_TO_TABLE(buffer, NULL) WITH ORDINALITY AS t(lit,n) OFFSET 13
+	SELECT   n, lit, 
+	STRING_AGG(lit,'') OVER w AS x
+	FROM marker 
+	CROSS JOIN  STRING_TO_TABLE(buffer, NULL) 
+		WITH ORDINALITY AS t(lit,n) 
+	WINDOW w AS (ORDER BY n RANGE BETWEEN 13 PRECEDING AND CURRENT ROW)
+	OFFSET 13
 ),
 
 literals (id, lit) AS
@@ -113,8 +136,14 @@ literals (id, lit) AS
 )
 
 
-SELECT n AS answer FROM cte JOIN literals l ON STRPOS(x,l.lit) > 0
-GROUP BY n HAVING COUNT(*) = 14 ORDER BY n LIMIT 1; 
+SELECT n AS answer 
+FROM cte 
+JOIN literals l 
+	ON STRPOS(x,l.lit) > 0
+GROUP BY n 
+HAVING COUNT(*) = 14 
+ORDER BY n 
+LIMIT 1; 
 
 
 
