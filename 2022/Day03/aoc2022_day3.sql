@@ -47,7 +47,7 @@ Find the item type that appears in both compartments of each rucksack. What is t
 
 */
 
-
+-- Read data
 
 
 CREATE FOREIGN TABLE aoc2022_day3 (x text)
@@ -55,42 +55,50 @@ SERVER aoc2022 options(filename 'D:\aoc2022.day3.input');
 
 
 
+-- Create base table
+
 CREATE TEMPORARY TABLE  rucksack 
 (
-id  SERIAL ,
-item TEXT
+   id  SERIAL,
+   item TEXT
 );
 
 
+
+-- Insert data
+
 INSERT INTO rucksack(item)
-SELECT
-*
+SELECT *
 FROM aoc2022_day3;
 
 
+-- First Star
+
 WITH compartments AS 
 (
-  SELECT id,  
-  SUBSTR(item, 1,LENGTH(item)/2) AS first_comp , 
-  SUBSTR(item,LENGTH(item)/2+1) AS second_comp 
-  FROM rucksack
+   SELECT id,  
+   SUBSTR(item, 1,LENGTH(item)/2) AS first_comp , 
+   SUBSTR(item,LENGTH(item)/2+1) AS second_comp 
+   FROM rucksack
 ),
 
 cte1 AS 
 (
-  SELECT DISTINCT id, lit 
-  FROM compartments CROSS JOIN STRING_TO_TABLE(first_comp, NULL) AS lit
+   SELECT DISTINCT id, lit 
+   FROM compartments 
+   CROSS JOIN STRING_TO_TABLE(first_comp, NULL) AS lit
 ),
 
 cte2 AS 
 (
-  SELECT DISTINCT id, lit  
-  FROM compartments CROSS JOIN STRING_TO_TABLE(second_comp, NULL) AS lit
+   SELECT DISTINCT id, lit  
+   FROM compartments 
+   CROSS JOIN STRING_TO_TABLE(second_comp, NULL) AS lit
 )
 
-SELECT SUM(CASE WHEN lit = LOWER(lit) THEN ASCII(lit)-96 ELSE  ASCII(lit)-38 END)
-AS answer
-FROM cte1 NATURAL JOIN cte2 ;
+SELECT SUM(CASE WHEN lit = LOWER(lit) THEN ASCII(lit)-96 ELSE  ASCII(lit)-38 END) AS answer
+FROM cte1 
+NATURAL JOIN cte2 ;
 
 
 
@@ -134,37 +142,39 @@ Find the item type that corresponds to the badges of each three-Elf group. What 
 
 */
 
+-- Second Star
+
 
 WITH buckets AS 
 (
-  SELECT id, item, 
-  NTILE((SELECT COUNT(*)/3 FROM rucksack)::INT ) OVER 
+   SELECT id, item, 
+   NTILE((SELECT COUNT(*)/3 FROM rucksack)::INT ) OVER 
     (ORDER BY id) AS bucket
-  FROM rucksack
+   FROM rucksack
 ),
 
 cte1 AS 
 (
-  SELECT DISTINCT bucket, lit  
-  FROM buckets 
-  CROSS JOIN STRING_TO_TABLE(item, NULL) AS lit
-  WHERE MOD(id,3) = 1
+   SELECT DISTINCT bucket, lit  
+   FROM buckets 
+   CROSS JOIN STRING_TO_TABLE(item, NULL) AS lit
+   WHERE MOD(id,3) = 1
 
 ),
 
 cte2 AS 
 (
-  SELECT DISTINCT bucket, lit  
-  FROM buckets CROSS JOIN STRING_TO_TABLE(item, NULL) AS lit
-  WHERE MOD(id,3) = 2
+   SELECT DISTINCT bucket, lit  
+   FROM buckets CROSS JOIN STRING_TO_TABLE(item, NULL) AS lit
+   WHERE MOD(id,3) = 2
 
 ),
 cte3 AS 
 (
-  SELECT DISTINCT bucket, lit  
-  FROM buckets 
-  CROSS JOIN STRING_TO_TABLE(item, NULL) AS lit
-  WHERE MOD(id,3) = 0
+   SELECT DISTINCT bucket, lit  
+   FROM buckets 
+   CROSS JOIN STRING_TO_TABLE(item, NULL) AS lit
+   WHERE MOD(id,3) = 0
 
 )
 
