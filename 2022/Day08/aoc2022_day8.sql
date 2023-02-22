@@ -41,37 +41,47 @@ Consider your map; how many trees are visible from outside the grid?
 */
 
 
-
+-- Read data
 
 CREATE FOREIGN TABLE aoc2022_day8(x text)
- SERVER aoc2022 options(filename 'D:\aoc2022.day8.input');
+SERVER aoc2022 options(filename 'D:\aoc2022.day8.input');
  
  
+ -- Create base table
  
- 
-CREATE TEMPORARY TABLE  forest  (
-x  SERIAL,
-heights  INT[]
+CREATE TEMPORARY TABLE  forest 
+(
+	x  SERIAL,
+	heights  INT[]
 );
 
-  
+
+-- Insert data
+
 INSERT INTO forest(heights)
-SELECT STRING_TO_ARRAY(x, NULL)::INT[] FROM aoc2022_day8;
+SELECT STRING_TO_ARRAY(x, NULL)::INT[] 
+FROM aoc2022_day8;
  
 
 
-
+-- First Star
  
 WITH cte AS 
 (
  
 	SELECT x, y, height,
-	COALESCE(MAX(height) OVER (PARTITION BY x ORDER BY y RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING ),-1) AS west,
-	COALESCE(MAX(height) OVER (PARTITION BY x ORDER BY y DESC RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING ),-1) AS east,
-	COALESCE(MAX(height) OVER (PARTITION BY y ORDER BY x RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING ),-1) AS north,
-	COALESCE(MAX(height) OVER (PARTITION BY y ORDER BY x DESC RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING ),-1) AS south
+	COALESCE(MAX(height) OVER w1, -1) AS west,
+	COALESCE(MAX(height) OVER w2, -1) AS east,
+	COALESCE(MAX(height) OVER w3, -1) AS north,
+	COALESCE(MAX(height) OVER w4 ,-1) AS south
 	FROM forest 
-	CROSS JOIN UNNEST(heights) WITH ORDINALITY AS t (height, y)
+	CROSS JOIN UNNEST(heights)
+		WITH ORDINALITY AS t (height, y)
+	WINDOW w1 AS (PARTITION BY x ORDER BY y RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING),
+	w2 AS (PARTITION BY x ORDER BY y DESC RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING),
+	w3 AS (PARTITION BY y ORDER BY x RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING ),
+	w4 AS (PARTITION BY y ORDER BY x DESC RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING)
+	   
 )
 
 SELECT COUNT(*) FROM cte WHERE height > west   OR height > east OR height > north OR height > south ;
@@ -128,20 +138,27 @@ Consider each tree on your map. What is the highest scenic score possible for an
 
 */
 
+-- Second Star
+
 WITH cte AS
 (
 	SELECT x, y, height
 	FROM forest 
-	CROSS JOIN UNNEST(heights) WITH ORDINALITY AS t (height, y)
+	CROSS JOIN UNNEST(heights) 
+		WITH ORDINALITY AS t (height, y)
 ),
 
 
 look_left AS 
 (
 
-	SELECT DISTINCT ON (a.x, a.y) a.*, COALESCE(a.y - b.y, a.y -1) AS left_score 
-	FROM cte a LEFT JOIN cte b 
-		ON a.x = b.x AND b.y < a.y AND b.height >= a.height
+	SELECT DISTINCT ON (a.x, a.y) a.*, 
+	COALESCE(a.y - b.y, a.y -1) AS left_score 
+	FROM cte a 
+	LEFT JOIN cte b 
+		ON a.x = b.x 
+		AND b.y < a.y 
+		AND b.height >= a.height
 	ORDER BY a.x, a.y, b.y DESC
 ),
 
@@ -150,9 +167,13 @@ look_left AS
 look_right AS
 
 (
-	SELECT DISTINCT ON (a.x, a.y) a.*, COALESCE(b.y - a.y, (SELECT CARDINALITY(heights) FROM forest LIMIT 1)- a.y) AS right_score 
-	FROM cte a LEFT JOIN cte b 
-		ON a.x = b.x AND b.y > a.y AND b.height >= a.height
+	SELECT DISTINCT ON (a.x, a.y) a.*, 
+	COALESCE(b.y - a.y, (SELECT CARDINALITY(heights) FROM forest LIMIT 1)- a.y) AS right_score 
+	FROM cte a 
+	LEFT JOIN cte b 
+		ON a.x = b.x 
+		AND b.y > a.y 
+		AND b.height >= a.height
 	ORDER BY a.x, a.y, b.y 
 	
 ),
@@ -160,9 +181,13 @@ look_right AS
 look_up AS 
 (
 
-	SELECT DISTINCT ON (a.x, a.y) a.*, COALESCE(a.x - b.x, a.x -1) AS up_score 
-	FROM cte a LEFT JOIN cte b 
-		ON a.x > b.x AND b.y = a.y AND b.height >= a.height
+	SELECT DISTINCT ON (a.x, a.y) a.*, 
+	COALESCE(a.x - b.x, a.x -1) AS up_score 
+	FROM cte a 
+	LEFT JOIN cte b 
+		ON a.x > b.x 
+		AND b.y = a.y 
+		AND b.height >= a.height
 	ORDER BY a.x, a.y, b.x DESC
 ),
 
@@ -170,9 +195,13 @@ look_up AS
 look_down AS 
 (
 
-	SELECT DISTINCT ON (a.x, a.y) a.*, COALESCE(b.x - a.x, (SELECT COUNT(*) FROM forest )- a.x) AS down_score 
-	FROM cte a LEFT JOIN cte b 
-		ON a.x < b.x AND b.y = a.y AND b.height >= a.height
+	SELECT DISTINCT ON (a.x, a.y) a.*, 
+	COALESCE(b.x - a.x, (SELECT COUNT(*) FROM forest )- a.x) AS down_score 
+	FROM cte a 
+	LEFT JOIN cte b 
+		ON a.x < b.x 
+		AND b.y = a.y 
+		AND b.height >= a.height
 	ORDER BY a.x, a.y, b.x 
 )
 
