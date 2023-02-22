@@ -226,23 +226,25 @@ In this example, the two most active monkeys inspected items 101 and 105 times. 
 
 Figure out which monkeys to chase by counting how many items they inspect over 20 rounds. What is the level of monkey business after 20 rounds of stuff-slinging simian shenanigans?
 
-
-
 */
 
-
+-- Read data
 
 CREATE FOREIGN TABLE aoc2022_day11(x text)
 SERVER aoc2022 options(filename 'D:\aoc2022.day11.input');
  
-CREATE TEMPORARY TABLE  monkeys  (
-monkey  INT,
-items  INT[],
-polynomial INT[3],
-test INT[3]
+ 
+-- Create base table
+
+CREATE TEMPORARY TABLE  monkeys  
+(
+	monkey  INT,
+	items  INT[],
+	polynomial INT[3],
+	test INT[3]
 );
 
--- Insert data manually
+-- Insert data (manually for convenience)
 
 INSERT INTO monkeys
 VALUES
@@ -256,27 +258,42 @@ VALUES
 (7, ARRAY[99, 76, 78, 76, 79, 90, 89],      ARRAY[7,1,0],  ARRAY[5,4,5]);
 
 
+
+-- First Star
+
+
 WITH RECURSIVE cte(step, substep,  monkey, item)  AS 
 
 (
-	SELECT 0, (SELECT COUNT(*) FROM monkeys) -1, monkey, UNNEST(items) AS item FROM monkeys
+	SELECT 0, (SELECT COUNT(*) FROM monkeys) -1, monkey, 
+	UNNEST(items) AS item 
+	FROM monkeys
 	UNION ALL
-	SELECT CASE WHEN substep = (SELECT COUNT(*) FROM monkeys) -1 THEN step + 1 ELSE step END, MOD(substep + 1,(SELECT COUNT(*) FROM monkeys)), 
-	CASE WHEN monkey = MOD(substep + 1,(SELECT COUNT(*) FROM monkeys)) THEN  
-	CASE WHEN MOD((polynomial[1]+ item *polynomial[2]+ POW(item,2)*polynomial[3])::INT/3,test[1]) = 0 THEN test[2] ELSE test[3] END
-	ELSE monkey END, 
+	SELECT 
+	CASE WHEN substep = (SELECT COUNT(*) FROM monkeys) -1 THEN step + 1 ELSE step END, 
+	MOD(substep + 1,(SELECT COUNT(*) FROM monkeys)), 
+	CASE WHEN monkey = MOD(substep + 1, (SELECT COUNT(*) FROM monkeys)) THEN  
+		CASE WHEN MOD((polynomial[1] + item * polynomial[2] + POW(item,2)  * polynomial[3])::INT / 3, test[1]) = 0 THEN test[2] ELSE test[3] END
+		ELSE monkey END, 
 	CASE WHEN monkey = MOD(substep + 1,(SELECT COUNT(*) FROM monkeys)) THEN
-	(polynomial[1]+ item *polynomial[2]+ POW(item,2)*polynomial[3])::INT/3  ELSE item END
-	FROM cte JOIN  monkeys 
+		(polynomial[1]+ item * polynomial[2]+ POW(item,2) * polynomial[3])::INT / 3  
+		ELSE item END
+	FROM cte 
+	JOIN  monkeys 
 	USING (monkey)
-	WHERE   (step, substep) != ( 20, (SELECT COUNT(*) FROM monkeys) -1)
- ),
+	WHERE (step, substep) != (20, (SELECT COUNT(*) FROM monkeys) - 1)
+),
  
 cte2 AS
 (
 
-	SELECT monkey ,COUNT(*) FILTER (WHERE CASE WHEN monkey = 0 THEN substep = (SELECT COUNT(*) FROM monkeys) -1 AND step < 20
-	ELSE monkey - 1 = substep END ) AS cnt FROM cte WHERE step <= 20 GROUP BY monkey ORDER BY cnt DESC 
+	SELECT monkey, 
+	COUNT(*) FILTER (WHERE CASE WHEN monkey = 0 THEN substep = (SELECT COUNT(*) FROM monkeys) -1 AND step < 20
+	ELSE monkey - 1 = substep END ) AS cnt 
+	FROM cte 
+	WHERE step <= 20
+	GROUP BY monkey 
+	ORDER BY cnt DESC 
 )
 
 SELECT (SELECT cnt FROM  cte2 LIMIT 1) * (SELECT cnt FROM cte2 OFFSET 1 LIMIT 1) AS monkey_business;
@@ -378,19 +395,25 @@ Starting again from the initial state in your puzzle input, what is the level of
 */
 
 
-WITH RECURSIVE cte(step, substep,  monkey, item)  AS 
+-- Second Star
 
+WITH RECURSIVE cte(step, substep,  monkey, item)  AS 
 (
-	SELECT 0, (SELECT COUNT(*) FROM monkeys) -1, monkey, UNNEST(items)::DECIMAL AS item FROM monkeys
+	SELECT 0, (SELECT COUNT(*) FROM monkeys) -1, monkey, 
+	UNNEST(items)::DECIMAL AS item 
+	FROM monkeys
 	UNION ALL
-	SELECT CASE WHEN substep = (SELECT COUNT(*) FROM monkeys) -1 THEN step + 1 ELSE step END, MOD(substep + 1,(SELECT COUNT(*) FROM monkeys)), 
+	SELECT CASE WHEN substep = (SELECT COUNT(*) FROM monkeys) -1 THEN step + 1 ELSE step END, 
+	MOD(substep + 1,(SELECT COUNT(*) FROM monkeys)), 
 	CASE WHEN monkey = MOD(substep + 1,(SELECT COUNT(*) FROM monkeys)) THEN  
-	CASE WHEN MOD(MOD((polynomial[1]+ item * polynomial[2]+ POW(item,2)*polynomial[3])::DECIMAL,(SELECT ROUND(EXP(SUM(LN(test[1])))::NUMERIC,0) FROM monkeys)) ,
-	test[1]) = 0 THEN test[2] ELSE test[3] END
+		CASE WHEN MOD(MOD((polynomial[1]+ item * polynomial[2] + POW(item,2)*polynomial[3])::DECIMAL,
+				  (SELECT ROUND(EXP(SUM(LN(test[1])))::NUMERIC,0) FROM monkeys)), test[1]) = 0 THEN test[2] ELSE test[3] END
 	ELSE monkey END, 
 	CASE WHEN monkey = MOD(substep + 1,(SELECT COUNT(*) FROM monkeys)) THEN
-	MOD((polynomial[1]+ item *polynomial[2]+ POW(item,2)*polynomial[3])::DECIMAL,(SELECT ROUND(EXP(SUM(LN(test[1])))::NUMERIC,0)  FROM monkeys))  ELSE item END
-	FROM cte JOIN  monkeys 
+		MOD((polynomial[1]+ item *polynomial[2]+ POW(item,2)*polynomial[3])::DECIMAL,(SELECT ROUND(EXP(SUM(LN(test[1])))::NUMERIC,0)  FROM monkeys))  
+		ELSE item END
+	FROM cte 
+	JOIN  monkeys 
 	USING (monkey)
 	WHERE   (step, substep) != ( 10000, (SELECT COUNT(*) FROM monkeys) -1)
  ),
@@ -398,8 +421,12 @@ WITH RECURSIVE cte(step, substep,  monkey, item)  AS
 cte2 AS
 (
 
-	SELECT monkey ,COUNT(*) FILTER (WHERE CASE WHEN monkey = 0 THEN substep = (SELECT COUNT(*) FROM monkeys) -1 AND step < 10000
-	ELSE monkey - 1 = substep END ) AS cnt FROM cte WHERE step <= 10000 GROUP BY monkey ORDER BY cnt DESC
+	SELECT monkey, 
+	COUNT(*) FILTER (WHERE CASE WHEN monkey = 0 THEN substep = (SELECT COUNT(*) FROM monkeys) -1 AND step < 10000
+		ELSE monkey - 1 = substep END ) AS cnt 
+	FROM cte WHERE step <= 10000 
+	GROUP BY monkey 
+	ORDER BY cnt DESC
 )
 
 SELECT (SELECT cnt FROM  cte2 LIMIT 1) * (SELECT cnt FROM cte2 OFFSET 1 LIMIT 1) AS monkey_business;
