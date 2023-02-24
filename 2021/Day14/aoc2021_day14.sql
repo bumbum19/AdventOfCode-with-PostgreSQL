@@ -62,29 +62,33 @@ most common element and subtract the quantity of the least common element?
 */
 
 
--- Setup
+-- Read data
 
 CREATE FOREIGN TABLE aoc2021_day14 (x text)
- SERVER aoc2022 options(filename 'D:\aoc2021.day14.input');
+SERVER aoc2022 options(filename 'D:\aoc2021.day14.input');
  
+-- Create base tables
  
-CREATE TEMPORARY TABLE  polymer (
-day  INT,
-x  text
+CREATE TEMPORARY TABLE polymer
+(
+	day  INT,
+	x  text
 );
+
+CREATE TEMPORARY TABLE  rules 
+(
+	id  SERIAL,
+	adj  CHAR(2),
+	bet  CHAR(1)
+);
+  
+-- Insert data
 
 INSERT INTO polymer 
 SELECT 0, x FROM aoc2021_day14 WHERE 
 x != '' AND x NOT LIKE '%->%';
 
 
-CREATE TEMPORARY TABLE  rules (
-  id  SERIAL,
-  adj  CHAR(2),
-  bet  CHAR(1)
-  );
-  
-  
 INSERT INTO rules(adj,bet)
 SELECT 
 SPLIT_PART(x,' -> ',1),
@@ -93,36 +97,43 @@ FROM aoc2021_day14
 WHERE 
 x != '' AND x  LIKE '%->%';
 
--- Solution
+-- First Star
  
-
 WITH RECURSIVE s AS 
 (
 
-SELECT r1.adj AS v1, r2.adj AS v2 FROM rules r1 JOIN rules r2 ON 
-SUBSTR(r1.adj,1,1) || r1.bet = r2.adj OR 
- r1.bet || SUBSTR(r1.adj,2) = r2.adj
+	SELECT r1.adj AS v1, r2.adj AS v2 
+	FROM rules r1 
+	JOIN rules r2 
+		ON SUBSTR(r1.adj,1,1) || r1.bet = r2.adj 
+		OR r1.bet || SUBSTR(r1.adj,2) = r2.adj
 ),
 
 
 t(v1,v2,step) AS 
 (
-SELECT SUBSTR(x,pos,2) AS v1, SUBSTR(x,pos,2) AS v2, 0
-FROM polymer CROSS JOIN  GENERATE_SERIES(1,LENGTH(x)-1) AS pos
-UNION ALL
-SELECT t.v2, s.v2, step + 1
-FROM t JOIN s ON
-t.v2 = s.v1 WHERE step < 10
+	SELECT SUBSTR(x,pos,2) AS v1, SUBSTR(x,pos,2) AS v2, 0
+	FROM polymer 
+	CROSS JOIN  GENERATE_SERIES(1,LENGTH(x)-1) AS pos
+	UNION ALL
+	SELECT t.v2, s.v2, step + 1
+	FROM t 
+	JOIN s 
+		ON t.v2 = s.v1 
+	WHERE step < 10
 ),
 
 cte AS 
 (
 
-SELECT SUBSTR(v2,2),COUNT(*) + CASE WHEN SUBSTR((SELECT x FROM polymer),1,1) = SUBSTR(v2,2) THEN 1 ELSE 0 END  AS cnt 
-FROM t WHERE step = 10 GROUP BY SUBSTR(v2,2) 
+	SELECT SUBSTR(v2,2),COUNT(*) + CASE WHEN SUBSTR((SELECT x FROM polymer),1,1) = SUBSTR(v2,2) THEN 1 ELSE 0 END  AS cnt 
+	FROM t 
+	WHERE step = 10 
+	GROUP BY SUBSTR(v2,2) 
 )
 
-SELECT MAX(cnt) - MIN(cnt) AS answer FROM cte;
+SELECT MAX(cnt) - MIN(cnt) AS answer
+FROM cte;
 
 
 --- Part Two ---
@@ -140,56 +151,60 @@ subtract the quantity of the least common element?
 
 
 
--- Solution
+-- Second Star
 
 WITH RECURSIVE s AS 
 (
 
-SELECT r1.adj AS v1, r2.adj AS v2 FROM rules r1 JOIN rules r2 ON 
-SUBSTR(r1.adj,1,1) || r1.bet = r2.adj OR 
- r1.bet || SUBSTR(r1.adj,2) = r2.adj
+	SELECT r1.adj AS v1, r2.adj AS v2 
+	FROM rules r1 
+	JOIN rules r2 
+		ON SUBSTR(r1.adj,1,1) || r1.bet = r2.adj 
+		OR r1.bet || SUBSTR(r1.adj,2) = r2.adj
 ),
 
 t(v1,v2,step) AS 
 (
-SELECT DISTINCT v1 AS v1, v1 AS v2, 0
-FROM s
-
-UNION ALL
-SELECT t.v1, s.v2, step + 1
-FROM t JOIN s ON
-t.v2 = s.v1 WHERE step < 10
+	SELECT DISTINCT v1 AS v1, v1 AS v2, 0
+	FROM s
+	UNION ALL
+	SELECT t.v1, s.v2, step + 1
+	FROM t 
+	JOIN s 
+		ON t.v2 = s.v1 
+	WHERE step < 10
 ),
 
-cte AS  (
-SELECT v1, v2, COUNT(*) AS cnt 
-FROM t WHERE step = 10 GROUP BY v1, v2 
+cte AS  
+(
+	SELECT v1, v2, COUNT(*) AS cnt 
+	FROM t 
+	WHERE step = 10 
+	GROUP BY v1, v2 
 ),
 
 cte2 AS 
 (
 
-SELECT  a.v1, b.v2, SUM(a.cnt * b.cnt )::BIGINT    AS cnt
-FROM cte a 
-JOIN cte b 
-	ON a.v2 = b.v1
-
-GROUP BY a.v1, b.v2
+	SELECT  a.v1, b.v2, SUM(a.cnt * b.cnt )::BIGINT  AS cnt
+	FROM cte a 
+	JOIN cte b 
+		ON a.v2 = b.v1
+	GROUP BY a.v1, b.v2
 
 ),
 
 cte3 AS 
 (
 
-SELECT  SUBSTR(b.v2,2), SUM(a.cnt * b.cnt )::BIGINT    +
-CASE WHEN SUBSTR((SELECT x FROM polymer),1,1) = SUBSTR(b.v2,2) THEN 1 ELSE 0 END  AS cnt
-FROM cte2 a 
-JOIN (SELECT SUBSTR(x,pos,2) AS x FROM polymer CROSS JOIN  GENERATE_SERIES(1,LENGTH(x)-1) AS pos) AS u
-	ON u.x = a.v1
-JOIN cte2 b 
-	ON a.v2 = b.v1
-
-GROUP BY SUBSTR(b.v2,2)
+	SELECT  SUBSTR(b.v2,2), SUM(a.cnt * b.cnt )::BIGINT    +
+	CASE WHEN SUBSTR((SELECT x FROM polymer),1,1) = SUBSTR(b.v2,2) THEN 1 ELSE 0 END  AS cnt
+	FROM cte2 a 
+	JOIN (SELECT SUBSTR(x,pos,2) AS x FROM polymer CROSS JOIN GENERATE_SERIES(1,LENGTH(x)-1) AS pos) AS u
+		ON u.x = a.v1
+	JOIN cte2 b 
+		ON a.v2 = b.v1
+	GROUP BY SUBSTR(b.v2,2)
 
 )
 
