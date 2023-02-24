@@ -1,0 +1,20 @@
+-- First Star
+
+ count
+-------
+ 11137
+(1 row)
+
+
+Time: 241.720 ms
+
+
+-- Second Star
+
+ length_cycle
+--------------
+         1037
+(1 row)
+
+
+Time: 1715.349 ms (00:01.715)
