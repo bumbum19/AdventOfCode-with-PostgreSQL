@@ -39,37 +39,41 @@ or position 10 (71 fuel).
 Determine the horizontal position that the crabs can align to using the least fuel possible. How much fuel must they spend to align to that position?
 */
 
-
+-- Read data
 
 CREATE FOREIGN TABLE aoc2021_day7 (a text)
-  SERVER aoc2022 options(filename 'D:\aoc2021.day7.input');
+SERVER aoc2022 options(filename 'D:\aoc2021.day7.input');
  
 
+-- Create base table
 
 
-
-CREATE TEMPORARY TABLE   crabs  (
-  id  SERIAL,
-  pos  INT
+CREATE TEMPORARY TABLE   crabs  
+(
+   id  SERIAL,
+   pos  INT
   
 ); 
   
-  
+-- Insert data 
 
 INSERT INTO crabs(pos)
-SELECT regexp_split_to_table(a,',')::INT FROM  aoc2021_day7;
+SELECT regexp_split_to_table(a,',')::INT 
+FROM  aoc2021_day7;
 
 
--- Solution
+-- First Star
 
 
 WITH median AS 
 (
-SELECT percentile_disc(0.5) 
-  WITHIN GROUP (ORDER BY pos)  
- FROM crabs)
+   SELECT percentile_disc(0.5) 
+      WITHIN GROUP (ORDER BY pos)  
+   FROM crabs
+)
 
-SELECT SUM(ABS(pos - (TABLE median))) AS costs FROM crabs;
+SELECT SUM(ABS(pos - (TABLE median))) AS costs 
+FROM crabs;
 
 
 --- Part Two ---
@@ -101,13 +105,18 @@ How much fuel must they spend to align to that position?
 */
 
 
+-- Second Star
+
 WITH mean_screw AS 
 (
-SELECT ROUND(AVG(pos)-0.5,0) AS low, ROUND(AVG(pos)+0.5,0) AS high FROM crabs) 
+   SELECT ROUND(AVG(pos)-0.5,0) AS low, ROUND(AVG(pos)+0.5,0) AS high 
+   FROM crabs
+) 
 
 
 SELECT LEAST(SUM((POW(ABS(pos - (SELECT low FROM mean_screw)),2) + 
                      ABS(pos - (SELECT low FROM mean_screw))) / 2 ),
              SUM((POW(ABS(pos - (SELECT high FROM mean_screw)),2) + 
-                     ABS(pos - (SELECT high FROM mean_screw))) / 2 ))::INT AS costs FROM crabs;
+                     ABS(pos - (SELECT high FROM mean_screw))) / 2 ))::INT AS costs 
+FROM crabs;
 
