@@ -49,13 +49,13 @@ Consider only horizontal and vertical lines. At how many points do at least two 
 ?
 */
 
-
+-- Read data
 
 CREATE FOREIGN TABLE aoc2021_day5 (a text)
- SERVER aoc2022 options(filename 'D:\aoc2021.day5.input');
+SERVER aoc2022 options(filename 'D:\aoc2021.day5.input');
  
 
-
+-- Create base table 
 
 CREATE TEMPORARY TABLE  hydrothermal  
 (
@@ -65,6 +65,8 @@ CREATE TEMPORARY TABLE  hydrothermal
       y2  INT,
       PRIMARY KEY (x1,y1,x2,y2)
 );
+
+-- Insert data
 
 INSERT INTO hydrothermal
 SELECT 
@@ -77,7 +79,7 @@ FROM aoc2021_day5;
 
 
 
--- Solution
+-- First Star
 
 
 WITH grid AS NOT MATERIALIZED 
@@ -158,67 +160,84 @@ Consider all of the lines. At how many points do at least two lines overlap?
 */
 
 
--- Solution
-
--- Query may need about 10 seconds!!!
+-- Second Star
 
 
-WITH grid AS NOT MATERIALIZED (
-    SELECT x,y
-FROM GENERATE_SERIES(0,999) AS x CROSS JOIN GENERATE_SERIES(0,999) AS y
+WITH grid AS NOT MATERIALIZED 
+(
+   SELECT x,y
+   FROM GENERATE_SERIES(0,999) AS x 
+   CROSS JOIN GENERATE_SERIES(0,999) AS y
 ),
 
 
 hydrothermal_vert AS
-
-(SELECT x1, y1, y2 FROM   hydrothermal WHERE 
-x1 = x2 ),
+(
+   SELECT x1, y1, y2 FROM   hydrothermal 
+   WHERE x1 = x2 
+),
 
 hydrothermal_horiz  AS
-(SELECT y1, x1, x2  FROM   hydrothermal WHERE 
-y1 = y2 ),
+(
+   SELECT y1, x1, x2  
+   FROM   hydrothermal 
+   WHERE y1 = y2 
+),
 
 hydrothermal_diag1 AS
-(SELECT  x1, y1, x2, y2 FROM hydrothermal WHERE 
-x1 - x2 = y1 - y2 
+(
+   SELECT  x1, y1, x2, y2 
+   FROM hydrothermal 
+   WHERE x1 - x2 = y1 - y2 
  ),
  
 hydrothermal_diag2 AS
 
-(SELECT  x1, y1, x2, y2 FROM hydrothermal WHERE 
- x1 - x2 = -(y1 - y2) 
- ),
+(
+   SELECT  x1, y1, x2, y2 
+   FROM hydrothermal 
+   WHERE x1 - x2 = -(y1 - y2) 
+),
 
 cte AS 
-(SELECT x,y
-FROM grid 
-JOIN hydrothermal_vert ON 
- ( y  >=y1 AND y <= y2 OR  y  >=y2 AND y <= y1 )  AND x = x1  
-
- UNION ALL
-
-SELECT x,y
-FROM grid 
-JOIN hydrothermal_horiz ON 
- ( x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )  AND y = y1
+(
+   SELECT x,y
+   FROM grid 
+   JOIN hydrothermal_vert 
+      ON (y  >=y1 AND y <= y2 OR  y  >=y2 AND y <= y1 )  
+      AND x = x1  
+   
+   UNION ALL
+   
+   SELECT x,y
+   FROM grid 
+   JOIN hydrothermal_horiz 
+      ON (x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )  
+      AND y = y1
  
- UNION ALL
+   UNION ALL
 
- SELECT x,y
-FROM grid 
-JOIN hydrothermal_diag1 ON 
- ( x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )   AND (x - x1 = y - y1)
+   SELECT x,y
+   FROM grid 
+   JOIN hydrothermal_diag1 
+      ON (x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )   
+      AND (x - x1 = y - y1)
  
- UNION ALL
-
-SELECT x,y
-FROM grid 
-JOIN hydrothermal_diag2 ON 
- ( x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )   AND (x - x1 = -(y - y1))
- ),
+   UNION ALL
+ 
+   SELECT x,y
+   FROM grid 
+   JOIN hydrothermal_diag2 
+      ON (x  >=x1 AND x <= x2 OR  x  >=x2 AND x <= x1 )   
+      AND (x - x1 = -(y - y1))
+),
  
 cte2 AS 
-(SELECT x,y FROM cte GROUP BY x,y HAVING COUNT(*) >= 2)
+(
+   SELECT x,y 
+   FROM cte GROUP BY x,y 
+   HAVING COUNT(*) >= 2
+)
 
 SELECT COUNT(*) FROM cte2;
 
