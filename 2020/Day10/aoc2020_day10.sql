@@ -207,7 +207,7 @@ What is the total number of distinct ways you can arrange the adapters to connec
 -- Second Star
 
 
--- Assume consecutive jolts have a difference of 1 or 3
+-- Assume consecutive jolts have a difference of 1 or 3 and at most 5 consective jolts of difference 1
 
 
 WITH cte AS
