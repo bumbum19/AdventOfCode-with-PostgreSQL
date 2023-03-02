@@ -47,7 +47,7 @@ Figure out where the navigation instructions lead. What is the Manhattan distanc
 
 -- Read data
 
-CREATE FOREIGN TABLE aoc2020_day21 (x text)
+CREATE FOREIGN TABLE aoc2020_day12 (x text)
 SERVER aoc2020 options(filename 'D:\aoc2020.day12.input');
 
 
