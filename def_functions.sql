@@ -1,5 +1,5 @@
 
--- Define product aggregate function( not optimized for windows usage)
+-- Define product aggregate function (not optimized for windows usage)
 
 
 
