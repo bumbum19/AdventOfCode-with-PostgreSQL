@@ -181,7 +181,7 @@ orbits_search(e1, e2, depth) AS
 (
 	SELECT orbit1, orbit2, 1  
 	FROM orbits_simple 
-	WHERE orbit1 = 'YOU' OR orbit2 = 'YOU'
+	WHERE orbit1 = 'YOU' 
 	UNION  ALL
 	SELECT orbit1, orbit2, os.depth + 1
 	FROM orbits_simple o
