@@ -64,12 +64,12 @@ Starting at the top-left corner of your map and following a slope of right 3 and
 
 */
 
-
+-- Read data
 
 CREATE FOREIGN TABLE aoc2020_day3 (x text)
 SERVER aoc2020 options(filename 'D:\aoc2020.day3.input');
 
-
+-- Create base table
 
 CREATE TEMPORARY TABLE grid
 (
@@ -77,13 +77,15 @@ CREATE TEMPORARY TABLE grid
 	pattern CHAR[]
 );
 
+-- Insert data
+
 INSERT INTO grid(pattern)
 SELECT STRING_TO_ARRAY(x,NULL) 
 FROM aoc2020_day3;
 
 
 
--- Query 1
+-- First Star
 
 
 WITH dim AS
@@ -122,23 +124,9 @@ What do you get if you multiply together the number of trees encountered on each
 
 */
 
--- Define product aggregate function( not optimized for windows usage)
 
-CREATE OR REPLACE FUNCTION  MULTIPLY(BIGINT, BIGINT) RETURNS BIGINT
-    AS 'select $1 * $2;'
-    LANGUAGE SQL
-    IMMUTABLE
-    RETURNS NULL ON NULL INPUT;
-	
-	
-CREATE OR REPLACE AGGREGATE PRODUCT  EXISTS (BIGINT)
-(
-    sfunc = MULTIPLY,
-    stype = BIGINT,
-    initcond = '1'
-);
 
--- Query 2
+-- Second Star
 
 
 WITH dim AS
