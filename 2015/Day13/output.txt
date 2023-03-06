@@ -1,0 +1,21 @@
+-- First Star
+
+ happiness
+-----------
+       664
+(1 row)
+
+
+Time: 23073.937 ms (00:23.074)
+
+
+ 
+ -- Second Star
+ 
+ new_happiness
+---------------
+           640
+(1 row)
+
+
+Time: 23885.051 ms (00:23.885)
