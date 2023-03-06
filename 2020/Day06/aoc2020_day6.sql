@@ -135,24 +135,7 @@ For each group, count the number of questions to which everyone answered "yes". 
 
 
 
-CREATE OR REPLACE FUNCTION ARRAY_UNIQUE_INTERSECT(a ANYARRAY, b ANYARRAY) RETURNS ANYARRAY
-	AS 'WITH cte(element) AS 
-	(
-		SELECT UNNEST(a)  
-		INTERSECT
-		SELECT  UNNEST(b) 
-		)
-	SELECT ARRAY_AGG(element) FROM cte;'
-	LANGUAGE SQL
-	IMMUTABLE
-	RETURNS NULL ON NULL INPUT; 
-	
-	
-CREATE OR REPLACE AGGREGATE ARRAY_UNIQUE_INTERSECT_AGG (ANYARRAY)
-(
-    sfunc = ARRAY_UNIQUE_INTERSECT,
-    stype = ANYARRAY
-);
+
 
 
 -- Second Star
