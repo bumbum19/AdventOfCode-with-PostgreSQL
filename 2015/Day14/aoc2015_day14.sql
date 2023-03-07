@@ -97,24 +97,19 @@ SELECT COUNT(*) AS points
 FROM GENERATE_SERIES(1, 2503) AS travel_time
 CROSS JOIN LATERAL 
 (
-	SELECT id
+	SELECT id,  speed * DIV(travel_time, max_time + rest_time)* max_time + 
+					CASE WHEN MOD(travel_time, max_time + rest_time) >= max_time 
+							THEN max_time * speed 
+						ELSE 
+							MOD(travel_time, max_time + rest_time) * speed END AS distance
 	FROM reindeers
-	CROSS JOIN LATERAL 
-	(
-		VALUES(
-			speed * DIV(travel_time, max_time + rest_time)* max_time + 
-				CASE WHEN MOD(travel_time, max_time + rest_time) >= max_time 
-						THEN max_time * speed 
-					ELSE 
-						MOD(travel_time, max_time + rest_time) * speed END
-		       )
-    	) AS t(distance)
 	ORDER BY distance DESC
 	LIMIT 1
 ) AS dt
 GROUP BY id
 ORDER BY points DESC
 LIMIT 1;
+
 
 
 
