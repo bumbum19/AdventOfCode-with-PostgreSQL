@@ -1,0 +1,20 @@
+-- First Star
+
+
+ distance
+----------
+     2696
+(1 row)
+
+
+Time: 0.782 ms
+
+-- Second Star 
+
+ points
+--------
+   1084
+(1 row)
+
+
+Time: 28.358 ms
