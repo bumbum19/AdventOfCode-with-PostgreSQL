@@ -38,7 +38,7 @@ What is the lowest house number of the house to get at least as many presents as
 -- Read data
 
 CREATE FOREIGN TABLE aoc2015_day20(x text)
-SERVER aoc2018 options(filename 'D:\aoc2015.day20.input');
+SERVER aoc2015 options(filename 'D:\aoc2015.day20.input');
 
 
 
