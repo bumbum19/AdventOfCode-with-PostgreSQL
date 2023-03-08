@@ -34,7 +34,7 @@ What is the distance of the shortest route?
 -- Read data
 
 CREATE FOREIGN TABLE aoc2015_day9(x text)
-SERVER aoc2018 options(filename 'D:\aoc2015.day9.input');
+SERVER aoc2015 options(filename 'D:\aoc2015.day9.input');
 
 
 
