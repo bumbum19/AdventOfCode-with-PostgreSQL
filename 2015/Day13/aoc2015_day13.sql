@@ -46,7 +46,7 @@ What is the total change in happiness for the optimal seating arrangement of the
 -- Read data
 
 CREATE FOREIGN TABLE aoc2015_day13(x text)
-SERVER aoc2018 options(filename 'D:\aoc2015.day13.input');
+SERVER aoc2015 options(filename 'D:\aoc2015.day13.input');
 
 
 
