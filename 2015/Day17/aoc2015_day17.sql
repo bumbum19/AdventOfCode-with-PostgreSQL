@@ -20,7 +20,7 @@ Filling all containers entirely, how many different combinations of containers c
 -- Read data
 
 CREATE FOREIGN TABLE aoc2015_day17(x text)
-SERVER aoc2018 options(filename 'D:\aoc2015.day17.input');
+SERVER aoc2015 options(filename 'D:\aoc2015.day17.input');
 
 
 -- Create base table
