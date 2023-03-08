@@ -28,7 +28,7 @@ Given the descriptions of each reindeer (in your puzzle input), after exactly 25
 
 
 CREATE FOREIGN TABLE aoc2015_day14(x text)
-SERVER aoc2018 options(filename 'D:\aoc2015.day14.input');
+SERVER aoc2015 options(filename 'D:\aoc2015.day14.input');
 
 
 -- Create base table
